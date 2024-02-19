@@ -4,7 +4,7 @@ public class Task_2_KDV {
     //KDV hesaplama
     public static void main(String[] args) {
 
-        int t ;
+        double t ;
         double kdv;
 
         Scanner input = new Scanner(System.in);
