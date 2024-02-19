@@ -1,5 +1,5 @@
 import java.util.Scanner;
-public class Task_10_NotOrt {
+public class Task__10_NotOrt {
     //Not Ortalama Hesaplama
     public static void main(String[] args) {
 
