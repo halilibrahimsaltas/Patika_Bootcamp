@@ -1,6 +1,5 @@
 import  java.util.Scanner;
 public class Task_1 {
-
     public static void main(String[] args) {
         //Not ortalama hesaplama
         int mat , fiz ,kim ,tr ,mz ,th ;
