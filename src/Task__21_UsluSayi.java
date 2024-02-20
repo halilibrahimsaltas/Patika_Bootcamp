@@ -4,7 +4,7 @@ public class Task__21_UsluSayi {
 
     public static void main(String[] args) {
 
-        int number, uslu ; // Kullanıcaıdan alınacak değerler
+        int number, uslu ; // Kullanıcıdan alınacak değerler
         int sum =1; // Üslü sayının değeri
 
         Scanner input = new Scanner(System.in);
