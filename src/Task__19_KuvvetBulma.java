@@ -3,7 +3,7 @@ public class Task__19_KuvvetBulma {
     //Kat Hesaplama
     public static void main(String[] args) {
 
-        int  number=0; // Kullanıcıdan alınacak değer
+        int  number; // Kullanıcıdan alınacak değer
 
         Scanner input= new Scanner(System.in);
 
