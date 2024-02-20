@@ -8,7 +8,7 @@ public class Task__24_Harmonik {
 
         Scanner input = new Scanner(System.in);
 
-        System.out.println("Bir sayı giriniz:");//kullanıcıdan ceri girişi
+        System.out.println("Bir sayı giriniz:");//kullanıcıdan veri girişi
         number= input.nextInt();
 
         for (double i =1; i <=number; i++){//Harmonik seri için gerekli loop
