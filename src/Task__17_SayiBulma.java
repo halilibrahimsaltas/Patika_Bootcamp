@@ -1,5 +1,5 @@
 import java.util.Scanner;
-public class Java__17_SayiBulma {
+public class Task__17_SayiBulma {
      //3 ve 4'E bölünen sayıların ortalaması
     public static void main(String[] args) {
 
