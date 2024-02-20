@@ -1,6 +1,5 @@
 public class Task__25_YildizUcgen {
     // Yıldızlardan Üçgen yapma
-
     public static void main(String[] args) {
 
         int a=9;// Kullanılacak max yıldız sayısı
@@ -32,6 +31,5 @@ public class Task__25_YildizUcgen {
             t=1;
             System.out.println(" ");//alt satıra inmek için
         }
-
     }
 }
