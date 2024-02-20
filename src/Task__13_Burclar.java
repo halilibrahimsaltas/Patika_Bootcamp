@@ -29,9 +29,5 @@ public class Task__13_Burclar {
         if(month>12 || day >31){
             System.out.println("Geçersiz tarih girdiniz.");
         }
-
-
     }
-
-
 }
