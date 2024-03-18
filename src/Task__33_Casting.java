@@ -3,24 +3,34 @@ public class Task__33_Casting {
     // Tip dönüştürme
     public static void main(String[] args) {
 
-        double double1 ; //Ondalıklı sayı
-        int integer2; // Tam sayı
 
-        Scanner input= new Scanner(System.in);
+        Scanner inp = new Scanner(System.in);
 
-        //Kullanıcı veri girişi
-        System.out.println("Ondalıklı bir sayı giriniz:");
-        double1= input.nextDouble();
-        System.out.println("Bir tam sayı giriniz:");
-        integer2= input.nextInt();
+        // Kullanıcıdan tam sayı girişi iste
 
-        //Dönüşüm casting
-        double double2 = integer2;
-        int integer3 = (int) double1;
+        System.out.print("Please enter an integer :  ");
+        int a = inp.nextInt();
 
-        //Çıktı
-        System.out.println("İlk sayı: " + integer3);
-        System.out.println("İkinci sayı: " + double2);
+        // Kullanıcıdan ondalıklı sayı girişi iste
+
+        System.out.print("Please enter a decimal :  ");
+        double b = inp.nextDouble();
+
+        // Tam sayıyı ondalıklı sayıya dönüştür
+
+        double decimal_a = (double) a;
+
+        // Ondalıklı sayıyı tam sayıya dönüştür
+
+        int integer_b = (int) b;
+
+
+        System.out.println("Integer input : " + a);
+        System.out.println("Integer to decimal : " + decimal_a);
+        System.out.println("Decimal input : " + b);
+        System.out.println("Decimal to integer : " + integer_b);
+
+
 
     }
 }

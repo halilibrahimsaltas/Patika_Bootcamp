@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CohortTask_1.iml" filepath="$PROJECT_DIR$/CohortTask_1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CohortTask_Week_5/CohortTask_Week_5.iml" filepath="$PROJECT_DIR$/CohortTask_Week_5/CohortTask_Week_5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CohortTask_Week_5/Try-Catch/Try-Catch.iml" filepath="$PROJECT_DIR$/CohortTask_Week_5/Try-Catch/Try-Catch.iml" />
     </modules>
   </component>
 </project>
