@@ -19,7 +19,7 @@ public class Main {
             }
         }
         String mostMentioned = null;
-        int maxCount = 0;
+        int maxCount = 1;
         for (String word : words.keySet()) { // Search loop
             int count = words.get(word);
             if (count > maxCount) {
