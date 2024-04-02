@@ -1,25 +1,34 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.sql.*;
 
 public class Main {
+    public static final String DB_URL = "jdbc:mysql://localhost/company";
+
+    public static final String DB_USERNAME = "root";
+    public static final String DB_PASSWORD = "mysql";
+
     public static void main(String[] args) {
-        String filePath = "src/main/java/numbers.txt";
-        int sum = 0;
+        Connection conn=null;
+        Statement st=null;
+        String sql ="SELECT * FROM employees";
 
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(filePath));
-            String line = reader.readLine();
+        try{
+            conn= DriverManager.getConnection(DB_URL,DB_USERNAME,DB_PASSWORD);
+            st=conn.createStatement();
+            ResultSet resultSet = st.executeQuery(sql);
+            while(resultSet.next()){
+                System.out.println("İsim: "+resultSet.getString("name"));
+                System.out.println("Pozisyon: "+resultSet.getString("position"));
+                System.out.println("Maaş: "+resultSet.getDouble("salary"));
+                System.out.println("#########################");
 
-
-            while (line != null) {
-                sum += Integer.parseInt(line);
-                line = reader.readLine();
             }
-            reader.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+            st.close();
+            conn.close();
+
+        }catch(SQLException ex){
+            System.out.println("SQLException: "+ex.getMessage());
         }
-        System.out.println("Sum = " + sum);
+
     }
+
 }
