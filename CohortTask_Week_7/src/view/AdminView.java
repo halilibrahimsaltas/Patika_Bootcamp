@@ -4,12 +4,16 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import business.BrandManager;
+import core.Helper;
 import entity.Brand;
 import entity.User;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AdminView extends  Layout{
     private JPanel container;
@@ -42,37 +46,13 @@ public class AdminView extends  Layout{
         this.lbl_welcome.setText("Welcome  " + this.user.getUsername()+" ! ");
 
         loadBrandTable();
-        this.brandMenu = new JPopupMenu();
-        this.brandMenu.add("New").addActionListener(e -> {
-            BrandView brandView = new BrandView(null);
-        });
-        this.brandMenu.add("Update").addActionListener(e -> {
-            int selectBrandId = Integer.parseInt(tbl_brands.getValueAt(tbl_brands.getSelectedRow(),0).toString());
-            BrandView brandView = new BrandView(this.brandManager.getById(selectBrandId));
-
-        });
-        this.brandMenu.add("Delete");
+        loadBrandComponent();
 
         this.tbl_brands.setComponentPopupMenu(brandMenu);
 
-
     }
 
-
-    public  void loadBrandTable(){
-        Object [] col_brand = { "Brand ID", "Brand Name"};
-        ArrayList<Brand> brandList= this.brandManager.findAll();
-        this.tmdl_brand.setColumnIdentifiers(col_brand);
-        for (Brand brand : brandList){
-            Object[] obj = { brand.getId(),brand.getName()};
-            tmdl_brand.addRow(obj);
-        }
-
-
-        tbl_brands.setModel(tmdl_brand);
-        tbl_brands.getTableHeader().setReorderingAllowed(false);
-        tbl_brands.setEnabled(false);
-
+    public void loadBrandComponent(){
         this.tbl_brands.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -80,11 +60,50 @@ public class AdminView extends  Layout{
                 tbl_brands.setRowSelectionInterval(selected_row,selected_row);
             }
         });
+        this.brandMenu = new JPopupMenu();
+        this.brandMenu.add("New").addActionListener(e -> {
+            BrandView brandView = new BrandView(null);
+            brandView.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    loadBrandTable();
+                }
+            });
+        });
+        this.brandMenu.add("Update").addActionListener(e -> {
+            int selectBrandId = this.getTableSelectedRow(tbl_brands,0);
+            BrandView brandView = new BrandView(this.brandManager.getById(selectBrandId));
+            brandView.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    loadBrandTable();
+                }
+            });
+
+        });
+        this.brandMenu.add("Delete").addActionListener(e -> {
+            if(Helper.confirm("sure")) {
+                int selectBrandId = this.getTableSelectedRow(tbl_brands, 0);
+                if(this.brandManager.delete(selectBrandId)){
+                    Helper.showMsg("done");
+                    loadBrandTable();
+                }else {
+                    Helper.showMsg("error");
+                }
+
+            }
+
+
+        });
 
     }
 
+    public  void loadBrandTable(){
+        Object [] col_brand = { "Brand ID", "Brand Name"};
+        ArrayList<Object[]> brandList= this.brandManager.getForTable(col_brand.length);
 
+        this.createTable(this.tmdl_brand, this.tbl_brands,col_brand,brandList);
 
-
+    }
 
 }

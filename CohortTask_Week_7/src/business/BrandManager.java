@@ -5,6 +5,7 @@ import dao.BrandDao;
 import entity.Brand;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class BrandManager {
     private  final BrandDao brandDao ;
@@ -16,6 +17,18 @@ public class BrandManager {
     public ArrayList<Brand> findAll(){
         return this.brandDao.findAll();
 
+    }
+
+    public  ArrayList<Object[]> getForTable(int size){
+        ArrayList<Object[]> brandRowList = new ArrayList<>();
+        for (Brand brand: this.findAll()){
+            Object[] rowObject = new Object[size];
+            int i =0;
+            rowObject[i++]=brand.getId();
+            rowObject[i++]=brand.getName();
+            brandRowList.add(rowObject);
+        }
+        return brandRowList;
     }
 
     public  boolean save (Brand brand){
@@ -34,5 +47,14 @@ public class BrandManager {
             Helper.showMsg("notFound");
         }
         return this.brandDao.update(brand);
+    }
+
+    public  boolean delete(int id){
+        if(this.getById(id)== null){
+            Helper.showMsg("notFound");
+            return false;
+        }
+
+        return  this.brandDao.delete(id);
     }
 }

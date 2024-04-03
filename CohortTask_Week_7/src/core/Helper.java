@@ -69,4 +69,15 @@ public class Helper {
         }
     }
 
+    public  static  boolean confirm ( String str){
+        String msg;
+        if(str.equals("sure")){
+            msg="Are you sure you want to do this?";
+        }else {
+            msg = str;
+        }
+
+        return JOptionPane.showConfirmDialog(null,msg,"Are you sure ?",JOptionPane.YES_NO_CANCEL_OPTION) ==0;
+    }
+
 }

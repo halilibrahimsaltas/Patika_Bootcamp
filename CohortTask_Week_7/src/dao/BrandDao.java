@@ -18,7 +18,7 @@ public class BrandDao {
     }
     public ArrayList<Brand> findAll(){
         ArrayList<Brand> brandList = new ArrayList<>();
-        String sql = "SELECT * FROM public.\"Brand\"";
+        String sql = "SELECT * FROM public.\"Brand\" ORDER BY brand_id ASC";
         try {
             ResultSet rs = this.con.createStatement().executeQuery(sql);
             while (rs.next()){
@@ -56,6 +56,20 @@ public class BrandDao {
         }
 
         return  true;
+    }
+
+    public  boolean delete ( int id){
+        String query= "DELETE FROM public.\"Brand\" WHERE brand_id = ?";
+
+        try{
+            PreparedStatement pr = this.con.prepareStatement(query);
+            pr.setInt(1,id);
+            return pr.executeUpdate() != -1;
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return true;
     }
 
 
