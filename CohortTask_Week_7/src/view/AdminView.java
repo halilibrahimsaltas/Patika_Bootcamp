@@ -182,6 +182,7 @@ public class AdminView extends  Layout{
             this.cmb_s_model_gear.setSelectedItem(null);
             this.cmb_s_model_fuel.setSelectedItem(null);
             this.cmb_s_model_brand.setSelectedItem(null);
+            loadModelTable(null);
         });
 
     }
