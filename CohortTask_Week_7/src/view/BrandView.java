@@ -5,8 +5,6 @@ import core.Helper;
 import entity.Brand;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class BrandView  extends  Layout{
     private JPanel container;
@@ -40,7 +38,7 @@ public class BrandView  extends  Layout{
                     result = this.brandManager.save(new Brand(fld_brand_name.getText()));
                 }else {
                     this.brand.setName(fld_brand_name.getText());
-                    result = this.brandManager.uptade(this.brand);
+                    result = this.brandManager.update(this.brand);
                 }
 
                 if (result){

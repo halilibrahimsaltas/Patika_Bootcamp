@@ -3,15 +3,18 @@ package business;
 import core.Helper;
 import dao.BrandDao;
 import entity.Brand;
+import entity.Model;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class BrandManager {
     private  final BrandDao brandDao ;
 
+    private  final ModelManager modelManager;
+
     public BrandManager() {
         this.brandDao = new BrandDao();
+        this.modelManager= new ModelManager();
     }
 
     public ArrayList<Brand> findAll(){
@@ -42,7 +45,7 @@ public class BrandManager {
         return this.brandDao.getById(id);
     }
 
-    public  boolean uptade(Brand brand){
+    public  boolean update(Brand brand){
         if (this.getById(brand.getId())== null){
             Helper.showMsg("notFound");
         }
@@ -55,6 +58,12 @@ public class BrandManager {
             return false;
         }
 
+        for(Model model : this.modelManager.getByListBrandId(id)){
+            this.modelManager.delete(model.getId());
+        }
+
         return  this.brandDao.delete(id);
     }
+
+
 }

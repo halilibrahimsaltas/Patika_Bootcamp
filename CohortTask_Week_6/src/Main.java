@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.Scanner;
 
 public class Main {
     public static final String DB_URL = "jdbc:mysql://localhost/company";
@@ -6,28 +7,22 @@ public class Main {
     public static final String DB_USERNAME = "root";
     public static final String DB_PASSWORD = "mysql";
 
-    public static void main(String[] args) {
-        Connection conn=null;
-        Statement st=null;
-        String sql ="SELECT * FROM employees";
+    public static boolean tap =false ;
 
-        try{
-            conn= DriverManager.getConnection(DB_URL,DB_USERNAME,DB_PASSWORD);
-            st=conn.createStatement();
-            ResultSet resultSet = st.executeQuery(sql);
-            while(resultSet.next()){
-                System.out.println("İsim: "+resultSet.getString("name"));
-                System.out.println("Pozisyon: "+resultSet.getString("position"));
-                System.out.println("Maaş: "+resultSet.getDouble("salary"));
-                System.out.println("#########################");
-
+    public static boolean PowersofTwo(int num) {
+            for (int i = 1; Math.pow(2, i) <= num; i++) {
+                if (num % Math.pow(2, i) == 0) {
+                    tap = true;
+                    break;
+                }
             }
-            st.close();
-            conn.close();
+            return tap;
 
-        }catch(SQLException ex){
-            System.out.println("SQLException: "+ex.getMessage());
-        }
+    }
+    public static void main (String[] args) {
+        // keep this function call here
+        Scanner s = new Scanner(System.in);
+        System.out.print(PowersofTwo(s.nextInt()));
 
     }
 
