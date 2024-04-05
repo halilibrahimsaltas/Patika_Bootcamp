@@ -1,5 +1,7 @@
 package entity;
 
+import core.ComboItem;
+
 public class Model {
     private int id;
     private int brand_id;
@@ -9,6 +11,11 @@ public class Model {
     private Fuel fuel;
     private Gear gear;
     private Brand brand;
+
+    public ComboItem getComboItem() {
+        return new ComboItem(this.getId(),this.getBrand().getName()+" - "+this.getName()+ " - "+ this.getYear()+" - "+ this.getGear());
+    }
+
     public enum Fuel {
         GASOLINE,
         LPG,
