@@ -2,6 +2,7 @@ package view;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.MaskFormatter;
 
 import business.BrandManager;
 import business.CarManager;
@@ -10,8 +11,11 @@ import core.ComboItem;
 import core.Helper;
 import entity.*;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class AdminView extends Layout {
@@ -53,6 +57,7 @@ public class AdminView extends Layout {
     private JComboBox <Model.Fuel>cmb_booking_fuel;
     private JComboBox <Model.Type> cmb_booking_type;
     private JButton btn_booking_search;
+    private JButton btn_cncl_booking;
     private User user;
 
     private Object[] col_model;
@@ -77,6 +82,8 @@ public class AdminView extends Layout {
     private JPopupMenu car_menu;
 
     private JPopupMenu booking_menu;
+
+    private Object[] col_car;
 
     public AdminView(User user) {
         this.brandManager = new BrandManager();
@@ -119,9 +126,14 @@ public class AdminView extends Layout {
                     (Model.Fuel) cmb_booking_fuel.getSelectedItem()
             );
 
+            ArrayList<Object[]> carBookingRow= this.carManager.getForTable(this.col_car.length,carList);
+            loadBookingTable(carBookingRow);
+
         });
 
-
+        btn_cncl_booking.addActionListener(e -> {
+            loadBookingFilter();
+        });
     }
 
 
@@ -151,7 +163,7 @@ public class AdminView extends Layout {
     }
 
     private void loadCarTable() {
-        Object[] col_car = {" ID", "Brand", "Model", "Plate", "Color", "KM", "Year", "Type", "Fuel Type", "Gear"};
+        col_car = new Object[]{" ID", "Brand", "Model", "Plate", "Color", "KM", "Year", "Type", "Fuel Type", "Gear"};
         ArrayList<Object[]> carList = this.carManager.getForTable(col_car.length, this.carManager.findAll());
         createTable(this.tmdl_car, this.tbl_cars, col_car, carList);
 
@@ -346,4 +358,10 @@ public class AdminView extends Layout {
 
     }
 
+    private void createUIComponents() throws ParseException {
+        this.fld_strt_date = new JFormattedTextField(new MaskFormatter("##/##/####"));
+        this.fld_strt_date.setText("05/04/2024");
+        this.fld_fnsh_date = new JFormattedTextField(new MaskFormatter("##/##/####"));
+        this.fld_fnsh_date.setText("24/04/2024");
+    }
 }

@@ -1,15 +1,25 @@
 package business;
 
 import core.Helper;
+import dao.BookDao;
 import dao.CarDao;
+import entity.Book;
 import entity.Model;
 import entity.Car;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class CarManager {
 
-    private final CarDao carDao = new CarDao();
+    private final CarDao carDao ;
+    private  final BookDao bookDao;
+
+    public CarManager() {
+        this.carDao=new CarDao();
+        this.bookDao = new BookDao();
+    }
 
     public Car getById(int id) { return this.carDao.getById(id);}
     public ArrayList<Car> findAll() { return this.carDao.findAll();}
@@ -55,27 +65,23 @@ public class CarManager {
         return  this.carDao.delete(id);
     }
     public  ArrayList<Car> searchForBooking( String strt_date, String fnsh_date, Model.Type type, Model.Gear gear, Model.Fuel fuel){
-        String query= "SELECT * FROM public.public.\"Car\" as c LEFT JOIN public.\"Model\" as m";
+        String query= "SELECT * FROM public.\"Car\" as c LEFT JOIN public.\"Model\" as m";
 
         ArrayList<String> where = new ArrayList<>();
         ArrayList<String> joinWhere = new ArrayList<>();
+        ArrayList<String> bookOrWhere = new ArrayList<>();
 
         joinWhere.add("c.car_model_id = m.model_id");
 
-        if (fuel != null){
-            where.add("m.model_fuel= '" + fuel.toString()+ "'");
+        strt_date = LocalDate.parse(strt_date, DateTimeFormatter.ofPattern("dd/MM/yyyy")).toString();
+        fnsh_date = LocalDate.parse(fnsh_date, DateTimeFormatter.ofPattern("dd/MM/yyyy")).toString();
 
-        }
-        if (gear != null){
-            where.add("m.model_gear= '" + gear.toString()+ "'");
-
-        }
-        if (type != null){
-            where.add("m.model_type= '" + type.toString()+ "'");
-        }
+        if (fuel != null){ where.add("m.model_fuel= '" + fuel.toString()+ "'");}
+        if (gear != null){ where.add("m.model_gear= '" + gear.toString()+ "'");}
+        if (type != null){ where.add("m.model_type= '" + type.toString()+ "'");}
 
         String whereStr = String.join(" AND ", where);
-        String joinStr = String.join(" AND " + joinWhere);
+        String joinStr = String.join(" AND " , joinWhere);
 
         if (!joinStr.isEmpty()){
             query += " ON " + joinStr;
@@ -85,37 +91,28 @@ public class CarManager {
             query+= " WHERE " + whereStr;
         }
 
+        ArrayList<Car> searchedCarList = this.carDao.selectByQuery(query);
+
+        bookOrWhere.add("('" + strt_date + "' BETWEEN book_strt_date AND book_fnsh_date)");
+        bookOrWhere.add("('" + fnsh_date + "' BETWEEN book_strt_date AND book_fnsh_date)");
+        bookOrWhere.add("(book_strt_date BETWEEN '" + strt_date + "' AND '" + fnsh_date + "')");
+        bookOrWhere.add("(book_fnsh_date BETWEEN '" + strt_date + "' AND '" + fnsh_date + "')");
+
+        String bookOrWhereStr = String.join(" OR ", bookOrWhere);
+        String bookQuery = " Select * FROM public.\"Book\" WHERE "+ bookOrWhereStr;
+
+        ArrayList<Book> bookList =this.bookDao.selectByQuery(bookQuery);
+        ArrayList<Integer>  busyCarId= new ArrayList<>();
+        for (Book book : bookList){
+            busyCarId.add(book.getCar_id());
+        }
+        searchedCarList.removeIf(car -> busyCarId.contains(car.getId()));
+
+
         return  this.carDao.selectByQuery(query);
 
     }
 
-   /* public  ArrayList<Model> searchForTable(int brandId, Model.Fuel fuel, Model.Gear gear, Model.Type type){
-        String select = "SELECT * FROM public.\"Model\" ";
-        ArrayList<String> whereList = new ArrayList<>();
-
-        if (brandId != 0) {
-            whereList.add("model_brand_id= "+ brandId);
-        }
-        if (fuel != null) {
-            whereList.add("model_fuel =' "+ fuel.toString()+"'");
-        }
-        if (gear != null) {
-            whereList.add("model_gear =' "+gear.toString()+"'");
-        }
-        if (type != null) {
-            whereList.add("model_type= '"+ type.toString()+"'");
-        }
-
-        String whereStr = String.join(" AND ", whereList);
-        String query = select;
-        if (!whereStr.isEmpty()){
-            query+= " WHERE "+ whereStr;
-        }
-
-        return  this.carDao.selectByQuery(query);
-    }
-
-    */
 
 
 }
