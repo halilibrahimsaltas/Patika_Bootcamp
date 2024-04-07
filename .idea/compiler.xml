@@ -5,7 +5,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="CohortTask_Week_7" options="--add-exports java.xml/com.sun.org.apache.bcel.internal.generic=ALL-UNNAMED" />
+      <module name="Patika_Task_Week_7" options="--add-exports java.xml/com.sun.org.apache.bcel.internal.generic=ALL-UNNAMED" />
     </option>
   </component>
 </project>

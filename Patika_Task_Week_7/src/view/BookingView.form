@@ -109,7 +109,9 @@
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <editable value="false"/>
+        </properties>
       </component>
       <component id="941fc" class="javax.swing.JLabel" binding="lbl_book_fnsh_date">
         <constraints>
@@ -125,7 +127,9 @@
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <editable value="false"/>
+        </properties>
       </component>
       <component id="2d15d" class="javax.swing.JLabel" binding="lbl_book_prc">
         <constraints>

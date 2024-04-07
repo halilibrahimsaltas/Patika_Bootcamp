@@ -11,8 +11,6 @@ import core.ComboItem;
 import core.Helper;
 import entity.*;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.ParseException;
@@ -58,6 +56,14 @@ public class AdminView extends Layout {
     private JComboBox <Model.Type> cmb_booking_type;
     private JButton btn_booking_search;
     private JButton btn_cncl_booking;
+    private JPanel pnl_rents;
+    private JPanel pnl_rents_p;
+    private JScrollPane scl_rents;
+    private JTable tbl_rents;
+    private JPanel pnl_plateSearch;
+    private JComboBox cmb_rents_plate_search;
+    private JLabel lbl_rents_plate_search;
+    private JButton btn_rents_search;
     private User user;
 
     private Object[] col_model;
@@ -117,6 +123,38 @@ public class AdminView extends Layout {
         loadBookingComponent();
         loadBookingFilter();
 
+    }
+
+
+    private void loadBookingFilter() {
+        this.cmb_booking_type.setModel(new DefaultComboBoxModel<>(Model.Type.values()));
+        this.cmb_booking_type.setSelectedItem(null);
+        this.cmb_booking_gear.setModel(new DefaultComboBoxModel<>(Model.Gear.values()));
+        this.cmb_booking_gear.setSelectedItem(null);
+        this.cmb_booking_fuel.setModel(new DefaultComboBoxModel<>(Model.Fuel.values()));
+        this.cmb_booking_fuel.setSelectedItem(null);
+    }
+
+    private void loadBookingComponent() {
+        tableRowSelected(this.tbl_booking);
+        this.booking_menu = new JPopupMenu();
+        this.booking_menu.add("Make a Reservation").addActionListener(e -> {
+            int selectCarId= this.getTableSelectedRow(this.tbl_booking,0);
+            BookingView bookingView= new BookingView(
+                    this.carManager.getById(selectCarId),
+                    this.fld_strt_date.getText(),
+                    this.fld_fnsh_date.getText()
+            );
+            bookingView.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    loadBookingTable(null);
+                    loadBookingFilter();
+
+                }
+            });
+        });
+
         btn_booking_search.addActionListener(e -> {
             ArrayList<Car> carList = this.carManager.searchForBooking(
                     fld_strt_date.getText(),
@@ -134,24 +172,7 @@ public class AdminView extends Layout {
         btn_cncl_booking.addActionListener(e -> {
             loadBookingFilter();
         });
-    }
 
-
-    private void loadBookingFilter() {
-        this.cmb_booking_type.setModel(new DefaultComboBoxModel<>(Model.Type.values()));
-        this.cmb_booking_type.setSelectedItem(null);
-        this.cmb_booking_gear.setModel(new DefaultComboBoxModel<>(Model.Gear.values()));
-        this.cmb_booking_gear.setSelectedItem(null);
-        this.cmb_booking_fuel.setModel(new DefaultComboBoxModel<>(Model.Fuel.values()));
-        this.cmb_booking_fuel.setSelectedItem(null);
-    }
-
-    private void loadBookingComponent() {
-        tableRowSelected(this.tbl_booking);
-        this.booking_menu = new JPopupMenu();
-        this.booking_menu.add("Make a Reservation").addActionListener(e -> {
-
-        });
         this.tbl_booking.setComponentPopupMenu(booking_menu);
 
     }
@@ -360,7 +381,7 @@ public class AdminView extends Layout {
 
     private void createUIComponents() throws ParseException {
         this.fld_strt_date = new JFormattedTextField(new MaskFormatter("##/##/####"));
-        this.fld_strt_date.setText("05/04/2024");
+        this.fld_strt_date.setText("02/04/2023");
         this.fld_fnsh_date = new JFormattedTextField(new MaskFormatter("##/##/####"));
         this.fld_fnsh_date.setText("24/04/2024");
     }

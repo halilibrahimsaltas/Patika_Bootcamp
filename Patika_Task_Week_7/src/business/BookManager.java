@@ -8,7 +8,13 @@ import java.util.ArrayList;
 
 public class BookManager {
 
-    private BookDao bookDao = new BookDao();
+    private final BookDao bookDao ;
 
+    public BookManager() {
+        this.bookDao = new BookDao();
+    }
 
+    public  boolean save(Book book){
+        return this.bookDao.save(book);
+    }
 }

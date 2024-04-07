@@ -43,7 +43,7 @@ public class BookDao {
         book.setCar_id(rs.getInt("book_car_id"));
         book.setName(rs.getString("book_name"));
         book.setStrt_date(LocalDate.parse(rs.getString("book_strt_date"), DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        book.setFnsh_date(LocalDate.parse(rs.getString("book_fnsh_date"),DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        book.setFnsh_date(LocalDate.parse(rs.getString("book_fnsh_date"), DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         book.setCar(this.carDao.getById(rs.getInt("book_car_id")));
         book.setIdno(rs.getString("book_idno"));
         book.setMpno(rs.getString("book_mpno"));
@@ -65,7 +65,7 @@ public class BookDao {
                 "book_fnsh_date," +
                 "book_prc," +
                 "book_case," +
-                "book_note," +
+                "book_note" +
                 ")" +
                 " VALUES (?,?,?,?,?,?,?,?,?,?)";
         try {
@@ -74,7 +74,7 @@ public class BookDao {
             pr.setString(2, book.getName());
             pr.setString(3, book.getIdno());
             pr.setString(4, book.getMpno());
-            pr.setString(2, book.getMail());
+            pr.setString(5, book.getMail());
             pr.setDate(6, Date.valueOf(book.getStrt_date()));
             pr.setDate(7, Date.valueOf(book.getFnsh_date()));
             pr.setInt(8, book.getPrc());
