@@ -112,6 +112,9 @@ public class AdminView extends Layout {
 
         this.lbl_welcome.setText("Welcome  " + this.user.getUsername() + " ! ");
 
+
+        loadComponent();
+
         loadBrandTable();
         loadBrandComponent();
 
@@ -134,7 +137,16 @@ public class AdminView extends Layout {
         loadRentsComponent();
         loadRentsFilter();
 
+
     }
+
+    private void loadComponent() {
+        btn_logout.addActionListener(e -> {
+            dispose();
+            LoginView loginView= new LoginView();
+        });
+    }
+
     private void loadRentsFilter(){
         this.cmb_rents_plate_search.removeAllItems();
         for (Car obj : carManager.findAll()){
@@ -203,10 +215,13 @@ public class AdminView extends Layout {
     }
 
     private void loadRentTable(ArrayList<Object[]> bookList){
-        this.col_rents_list = new Object[]{" ID", "Plate", "Car Brand", "Model", "Customer", "MPhone", "Mail", "T.C.", "Start Date", "Finish Date", "Price"};
+        col_rents_list = new Object[]{" ID", "Plate", "Car Brand", "Model", "Customer", "MPhone", "Mail", "T.C.", "Start Date", "Finish Date", "Price"};
         if (bookList == null) {
             bookList = this.bookManager.getForTable(this.col_rents_list.length, this.bookManager.findAll());
         }
+
+
+
         createTable(this.tmbl_rents,this.tbl_rents,col_rents_list,bookList);
     }
     public void loadModelTable(ArrayList<Object[]> modelList) {
@@ -224,44 +239,6 @@ public class AdminView extends Layout {
         createTable(this.tmdl_car, this.tbl_cars, col_car, carList);
 
     }
-
-    private void loadCarComponent() {
-        tableRowSelected(this.tbl_cars);
-        this.car_menu = new JPopupMenu();
-        this.car_menu.add("New").addActionListener(e -> {
-            CarView carView = new CarView(new Car());
-            carView.addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosed(WindowEvent e) {
-                    loadCarTable();
-                }
-            });
-
-        });
-        this.car_menu.add("Update").addActionListener(e -> {
-            int selectModelId = this.getTableSelectedRow(tbl_cars, 0);
-            CarView carView = new CarView(this.carManager.getById(selectModelId));
-            carView.addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosed(WindowEvent e) {
-                    loadCarTable();
-                }
-            });
-        });
-        this.car_menu.add("Delete").addActionListener(e -> {
-            if (Helper.confirm("sure")){
-                int selectCarId = this.getTableSelectedRow(tbl_cars,0);
-                if (this.carManager.delete(selectCarId)){
-                    Helper.showMsg("done");
-                    loadCarTable();
-                }else{
-                    Helper.showMsg("error");
-                }
-            }
-        });
-
-        this.tbl_cars.setComponentPopupMenu(car_menu);
-    }
     private void loadRentsComponent(){
         tableRowSelected(this.tbl_rents);
         this.rents_menu = new JPopupMenu();
@@ -270,7 +247,7 @@ public class AdminView extends Layout {
                 int selectRentId = this.getTableSelectedRow(tbl_rents,0);
                 if (this.bookManager.delete(selectRentId)){
                     Helper.showMsg("done");
-                    loadCarTable();
+                    loadRentTable(null);
                 }else{
                     Helper.showMsg("error");
                 }
@@ -289,13 +266,53 @@ public class AdminView extends Layout {
         });
 
         this.btn_rents_default.addActionListener(e -> {
-            this.cmb_rents_plate_search.setSelectedItem(null);
-            loadModelTable(null);
+            loadRentsFilter();
         });
 
         this.tbl_rents.setComponentPopupMenu(rents_menu);
 
     }
+
+    private void loadCarComponent() {
+        tableRowSelected(this.tbl_cars);
+        this.car_menu = new JPopupMenu();
+        this.car_menu.add("New").addActionListener(e -> {
+            CarView carView = new CarView(new Car());
+            carView.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    loadCarTable();
+                    loadRentTable(null);
+                }
+            });
+
+        });
+        this.car_menu.add("Update").addActionListener(e -> {
+            int selectModelId = this.getTableSelectedRow(tbl_cars, 0);
+            CarView carView = new CarView(this.carManager.getById(selectModelId));
+            carView.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    loadCarTable();
+                    loadRentTable(null);
+                }
+            });
+        });
+        this.car_menu.add("Delete").addActionListener(e -> {
+            if (Helper.confirm("sure")){
+                int selectCarId = this.getTableSelectedRow(tbl_cars,0);
+                if (this.carManager.delete(selectCarId)){
+                    Helper.showMsg("done");
+                    loadCarTable();
+                }else{
+                    Helper.showMsg("error");
+                }
+            }
+        });
+
+        this.tbl_cars.setComponentPopupMenu(car_menu);
+    }
+
 
 
     public void loadBrandComponent() {
@@ -309,6 +326,7 @@ public class AdminView extends Layout {
                     loadBrandTable();
                     loadModelTable(null);
                     loadModelFilterBrand();
+                    loadRentTable(null);
                 }
             });
         });
@@ -322,6 +340,7 @@ public class AdminView extends Layout {
                     loadModelTable(null);
                     loadModelFilterBrand();
                     loadCarTable();
+                    loadRentTable(null);
                 }
             });
 
@@ -335,6 +354,7 @@ public class AdminView extends Layout {
                     loadModelTable(null);
                     loadModelFilterBrand();
                     loadCarTable();
+                    loadRentTable(null);
                 } else {
                     Helper.showMsg("error");
                 }
@@ -366,6 +386,7 @@ public class AdminView extends Layout {
                 public void windowClosed(WindowEvent e) {
                     loadModelTable(null);
                     loadCarTable();
+                    loadRentTable(null);
                 }
             });
 
@@ -377,6 +398,7 @@ public class AdminView extends Layout {
                     Helper.showMsg("done");
                     loadModelTable(null);
                     loadCarTable();
+                    loadRentTable(null);
                 } else {
                     Helper.showMsg("error");
                 }

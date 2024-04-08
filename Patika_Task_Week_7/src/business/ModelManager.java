@@ -15,8 +15,9 @@ public class ModelManager {
     public ArrayList<Object[]> getForTable(int size,ArrayList<Model> modelList) {
         ArrayList<Object[]> modelObjList = new ArrayList<>();
         for (Model model : modelList) {
-            Object[] rowObject = new Object[size];
             int i = 0;
+
+            Object[] rowObject = new Object[size];
             rowObject[i++] = model.getId();
             rowObject[i++] = model.getBrand().getName();
             rowObject[i++] = model.getName();

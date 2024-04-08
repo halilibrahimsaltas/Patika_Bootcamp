@@ -115,22 +115,21 @@ public class Book {
         this.prc = prc;
     }
 
-    public  String toString(){
-        return "Book{"+
-                "id="+ id+
-                ", car_id=" + car_id+
-                ", car="+ car+
-                ", name='"+ name+
-                ", idno='"+ idno+'\''+
-                ", mpno='"+mpno+'\''+
-                ", mail='"+mail+'\''+
-                ", strt_date="+ strt_date+
-                ", fnsh_date="+fnsh_date+
-                ", bCase='"+ bCase+'\''+
-                ", note='"+note+'\''+
-                ", prc="+ prc+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", car_id=" + car_id +
+                ", car=" + car +
+                ", name='" + name + '\'' +
+                ", idno='" + idno + '\'' +
+                ", mpno='" + mpno + '\'' +
+                ", mail='" + mail + '\'' +
+                ", strt_date=" + strt_date +
+                ", fnsh_date=" + fnsh_date +
+                ", bCase='" + bCase + '\'' +
+                ", note='" + note + '\'' +
+                ", prc=" + prc +
                 '}';
     }
-
-
 }
