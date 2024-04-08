@@ -3,6 +3,7 @@ package dao;
 import core.Db;
 import entity.Book;
 import entity.Car;
+import entity.Model;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -10,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class BookDao {
-    private Connection con;
+    private final Connection con;
     private  final CarDao carDao;
 
     public BookDao() {
@@ -42,14 +43,14 @@ public class BookDao {
         book.setbCase(rs.getString("book_case"));
         book.setCar_id(rs.getInt("book_car_id"));
         book.setName(rs.getString("book_name"));
-        book.setStrt_date(LocalDate.parse(rs.getString("book_strt_date"), DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        book.setFnsh_date(LocalDate.parse(rs.getString("book_fnsh_date"), DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        book.setStrt_date(LocalDate.parse(rs.getString("book_strt_date")));
+        book.setFnsh_date(LocalDate.parse(rs.getString("book_fnsh_date")));
         book.setCar(this.carDao.getById(rs.getInt("book_car_id")));
         book.setIdno(rs.getString("book_idno"));
         book.setMpno(rs.getString("book_mpno"));
         book.setMail(rs.getString("book_mail"));
         book.setNote(rs.getString("book_note"));
-        book.setPrc(rs.getInt("book_prs"));
+        book.setPrc(rs.getInt("book_prc"));
         return book;
 
     }
@@ -84,6 +85,35 @@ public class BookDao {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        return true;
+    }
+
+    public Book getById(int id) {
+        Book obj = null;
+        String query = "SELECT * FROM public.\"Book\" WHERE book_id = ?";
+        try {
+            PreparedStatement pr = this.con.prepareStatement(query);
+            pr.setInt(1, id);
+            ResultSet rs = pr.executeQuery();
+            if (rs.next()) {
+                obj = this.match(rs);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return obj;
+    }
+    public boolean delete(int bookId) {
+        String query = "DELETE FROM public.\"Book\" WHERE book_id = ?";
+
+        try {
+            PreparedStatement pr = this.con.prepareStatement(query);
+            pr.setInt(1, bookId);
+            return pr.executeUpdate() != -1;
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
+
         return true;
     }
 }

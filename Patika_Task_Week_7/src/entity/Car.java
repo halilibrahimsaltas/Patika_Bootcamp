@@ -10,6 +10,8 @@ public class Car {
     private Brand brand;
 
     public enum Color {
+
+        BLACK,
         RED,
         BLUE,
         WHITE,
@@ -18,6 +20,10 @@ public class Car {
     }
 
     public Car() {
+    }
+
+    public Car(String plate){
+        this.plate= plate;
     }
 
     public int getId() {

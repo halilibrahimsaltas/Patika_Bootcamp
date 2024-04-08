@@ -24,11 +24,11 @@ public class CarManager {
     public Car getById(int id) { return this.carDao.getById(id);}
     public ArrayList<Car> findAll() { return this.carDao.findAll();}
 
-    public ArrayList<Object[]> getForTable(int size,ArrayList<Car> carList) {
+    public ArrayList<Object[]> getForTable(int size,ArrayList<Car> cars) {
         ArrayList<Object[]> carObjList = new ArrayList<>();
-        for (Car car : carList) {
-            Object[] rowObject = new Object[size];
+        for (Car car : cars) {
             int i = 0;
+            Object[] rowObject = new Object[size];
             rowObject[i++] = car.getId();
             rowObject[i++] = car.getModel().getBrand().getName();
             rowObject[i++] = car.getModel().getName();
@@ -107,8 +107,6 @@ public class CarManager {
             busyCarId.add(book.getCar_id());
         }
         searchedCarList.removeIf(car -> busyCarId.contains(car.getId()));
-
-
         return  this.carDao.selectByQuery(query);
 
     }

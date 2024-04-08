@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 
+import business.BookManager;
 import business.BrandManager;
 import business.CarManager;
 import business.ModelManager;
@@ -11,6 +12,8 @@ import core.ComboItem;
 import core.Helper;
 import entity.*;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.ParseException;
@@ -61,40 +64,43 @@ public class AdminView extends Layout {
     private JScrollPane scl_rents;
     private JTable tbl_rents;
     private JPanel pnl_plateSearch;
-    private JComboBox cmb_rents_plate_search;
+    private JComboBox<ComboItem> cmb_rents_plate_search;
     private JLabel lbl_rents_plate_search;
     private JButton btn_rents_search;
+    private JButton btn_rents_default;
     private User user;
 
-    private Object[] col_model;
 
     private DefaultTableModel tmdl_brand = new DefaultTableModel();
     private DefaultTableModel tmdl_model = new DefaultTableModel();
-
     private DefaultTableModel tmdl_car = new DefaultTableModel();
-
     private DefaultTableModel tmdl_booking = new DefaultTableModel();
+    private  DefaultTableModel tmbl_rents= new DefaultTableModel();
 
     private BrandManager brandManager;
-
     private ModelManager modelManager;
-
+    private BookManager bookManager;
     private CarManager carManager;
-
     private JPopupMenu brand_menu;
-
     private JPopupMenu model_menu;
-
     private JPopupMenu car_menu;
-
     private JPopupMenu booking_menu;
+    private  JPopupMenu rents_menu;
 
     private Object[] col_car;
+    private Object[] col_model;
+
+    private Object[] col_rents_list;
+
+
+
 
     public AdminView(User user) {
         this.brandManager = new BrandManager();
         this.modelManager = new ModelManager();
         this.carManager = new CarManager();
+        this.bookManager = new BookManager();
+
         this.add(container);
         this.guiInitilaze(1000, 500);
         this.user = user;
@@ -122,6 +128,19 @@ public class AdminView extends Layout {
         loadBookingTable(null);
         loadBookingComponent();
         loadBookingFilter();
+
+        //Rent Menu
+        loadRentTable(null);
+        loadRentsComponent();
+        loadRentsFilter();
+
+    }
+    private void loadRentsFilter(){
+        this.cmb_rents_plate_search.removeAllItems();
+        for (Car obj : carManager.findAll()){
+            this.cmb_rents_plate_search.addItem(new ComboItem(obj.getId(),obj.getPlate()));
+        }
+        this.cmb_rents_plate_search.setSelectedItem(null);
 
     }
 
@@ -183,8 +202,24 @@ public class AdminView extends Layout {
 
     }
 
+    private void loadRentTable(ArrayList<Object[]> bookList){
+        this.col_rents_list = new Object[]{" ID", "Plate", "Car Brand", "Model", "Customer", "MPhone", "Mail", "T.C.", "Start Date", "Finish Date", "Price"};
+        if (bookList == null) {
+            bookList = this.bookManager.getForTable(this.col_rents_list.length, this.bookManager.findAll());
+        }
+        createTable(this.tmbl_rents,this.tbl_rents,col_rents_list,bookList);
+    }
+    public void loadModelTable(ArrayList<Object[]> modelList) {
+        this.col_model = new Object[]{" Model ID", "Brand", "Model Name", "Type", "Year", "Fuel Type", "Gear"};
+        if (modelList == null) {
+            modelList = this.modelManager.getForTable(this.col_model.length, this.modelManager.findAll());
+        }
+        createTable(this.tmdl_model, this.tbl_model, this.col_model, modelList);
+
+    }
+
     private void loadCarTable() {
-        col_car = new Object[]{" ID", "Brand", "Model", "Plate", "Color", "KM", "Year", "Type", "Fuel Type", "Gear"};
+        this.col_car = new Object[]{" ID", "Brand", "Model", "Plate", "Color", "KM", "Year", "Type", "Fuel Type", "Gear"};
         ArrayList<Object[]> carList = this.carManager.getForTable(col_car.length, this.carManager.findAll());
         createTable(this.tmdl_car, this.tbl_cars, col_car, carList);
 
@@ -226,6 +261,40 @@ public class AdminView extends Layout {
         });
 
         this.tbl_cars.setComponentPopupMenu(car_menu);
+    }
+    private void loadRentsComponent(){
+        tableRowSelected(this.tbl_rents);
+        this.rents_menu = new JPopupMenu();
+        this.rents_menu.add("Delete").addActionListener(e -> {
+            if (Helper.confirm("sure")){
+                int selectRentId = this.getTableSelectedRow(tbl_rents,0);
+                if (this.bookManager.delete(selectRentId)){
+                    Helper.showMsg("done");
+                    loadCarTable();
+                }else{
+                    Helper.showMsg("error");
+                }
+            }
+
+        });
+        btn_rents_search.addActionListener(e -> {
+            ComboItem selectedCar = (ComboItem) this.cmb_rents_plate_search.getSelectedItem();
+            int carId = 0;
+            if (selectedCar != null) {
+                carId = selectedCar.getKey();
+            }
+            ArrayList<Book> bookListBySearch = this.bookManager.searchForTable(carId);
+            ArrayList<Object[]> bookRowListBySearch = this.bookManager.getForTable(this.col_rents_list.length, bookListBySearch);
+            loadRentTable(bookRowListBySearch);
+        });
+
+        this.btn_rents_default.addActionListener(e -> {
+            this.cmb_rents_plate_search.setSelectedItem(null);
+            loadModelTable(null);
+        });
+
+        this.tbl_rents.setComponentPopupMenu(rents_menu);
+
     }
 
 
@@ -342,14 +411,7 @@ public class AdminView extends Layout {
 
     }
 
-    public void loadModelTable(ArrayList<Object[]> modelList) {
-        this.col_model = new Object[]{" Model ID", "Brand", "Model Name", "Type", "Year", "Fuel Type", "Gear"};
-        if (modelList == null) {
-            modelList = this.modelManager.getForTable(col_model.length, this.modelManager.findAll());
-        }
-        createTable(this.tmdl_model, this.tbl_model, col_model, modelList);
 
-    }
 
     public void loadBrandTable() {
         Object[] col_brand = {"Brand ID", "Brand Name"};
@@ -379,9 +441,11 @@ public class AdminView extends Layout {
 
     }
 
+
+
     private void createUIComponents() throws ParseException {
         this.fld_strt_date = new JFormattedTextField(new MaskFormatter("##/##/####"));
-        this.fld_strt_date.setText("02/04/2023");
+        this.fld_strt_date.setText("02/04/2024");
         this.fld_fnsh_date = new JFormattedTextField(new MaskFormatter("##/##/####"));
         this.fld_fnsh_date.setText("24/04/2024");
     }

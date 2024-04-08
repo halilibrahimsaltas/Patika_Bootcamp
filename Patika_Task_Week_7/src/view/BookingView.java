@@ -53,14 +53,6 @@ public class BookingView  extends  Layout{
         this.fld_book_fnsh_date.setText(fnsh_date);
 
 
-        /*this.fld_book_name.setText("Mustafa Çetindağ");
-        this.fld_book_idno.setText("1234123411");
-        this.fld_book_mail.setText("test@patika.dev");
-        this.fld_book_mpno.setText("05501234567");
-        this.fld_book_prc.setText("2350");
-        this.fld_book_note.setText("Not bırakıldı");
-        */
-
 
 
         btn_book_save.addActionListener(e -> {
